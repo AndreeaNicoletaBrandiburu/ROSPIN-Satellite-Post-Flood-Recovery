@@ -1,0 +1,50 @@
+.healing-map-container {
+  height: 100%;
+}
+
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: rgba(10, 14, 39, 0.5);
+  border-radius: 8px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #a0d0ff;
+  font-size: 0.9rem;
+}
+
+.legend-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.map-popup {
+  color: #1a1f3a;
+}
+
+.map-popup h4 {
+  margin-bottom: 0.5rem;
+  color: #4a9eff;
+}
+
+.map-popup p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.no-events-message {
+  text-align: center;
+  padding: 3rem;
+  color: #64c8ff;
+  font-style: italic;
+}
+

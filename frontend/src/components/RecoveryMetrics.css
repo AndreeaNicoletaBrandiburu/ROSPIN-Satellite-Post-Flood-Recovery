@@ -1,0 +1,110 @@
+.recovery-metrics-container {
+  min-height: 400px;
+}
+
+.metrics-summary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: rgba(10, 14, 39, 0.5);
+  border-radius: 8px;
+}
+
+.metric-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.metric-label {
+  font-size: 0.85rem;
+  color: #a0d0ff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metric-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #64c8ff;
+}
+
+.chart-container {
+  margin-top: 2rem;
+}
+
+.chart-container h4 {
+  color: #64c8ff;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.no-selection {
+  text-align: center;
+  padding: 2rem;
+  color: #a0d0ff;
+}
+
+.events-list {
+  margin-top: 2rem;
+  text-align: left;
+}
+
+.events-list h4 {
+  color: #64c8ff;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.events-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.events-list li {
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  background: rgba(10, 14, 39, 0.5);
+  border: 1px solid rgba(100, 200, 255, 0.2);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.events-list li:hover {
+  background: rgba(10, 14, 39, 0.8);
+  border-color: #64c8ff;
+  transform: translateX(5px);
+}
+
+.events-list li.selected {
+  background: rgba(74, 158, 255, 0.2);
+  border-color: #64c8ff;
+}
+
+.event-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.event-date {
+  color: #a0d0ff;
+  font-size: 0.9rem;
+}
+
+.event-recovery {
+  color: #64c8ff;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.no-data {
+  text-align: center;
+  padding: 2rem;
+  color: #a0d0ff;
+  font-style: italic;
+}
+
