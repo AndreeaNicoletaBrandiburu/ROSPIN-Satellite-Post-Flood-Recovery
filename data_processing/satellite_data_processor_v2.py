@@ -16,6 +16,8 @@ import xarray as xr
 import rioxarray as rio
 from datetime import datetime, timedelta
 from typing import Tuple, Optional, Dict, List
+from lifelines import KaplanMeierFitter
+from lifelines.statistics import logrank_test
 import warnings
 warnings.filterwarnings('ignore')
 

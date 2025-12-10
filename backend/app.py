@@ -18,13 +18,22 @@ import json
 
 # Add parent directory to path to import data processing module
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-
+#importing V3
 try:
-    from data_processing.satellite_data_processor_v2 import SatelliteDataProcessor
-except ImportError:
-    # Fallback if module not found
-    print("Warning: Data processing module not found. Some endpoints may not work.")
-    SatelliteDataProcessor = None
+    # Try importing V3
+    from data_processing.satellite_data_processor_v3 import SatelliteAIProcessor
+    print("✅ Loaded V3 AI Processor")
+    ProcessorClass = SatelliteAIProcessor
+except ImportError as e:
+    # Print the ACTUAL error to help debugging
+    print(f"⚠️ V3 Processor failed to load. Reason: {e}")
+    print("⚠️ Falling back to V2 Processor.")
+    try:
+        from data_processing.satellite_data_processor_v2 import SatelliteDataProcessor
+        ProcessorClass = SatelliteDataProcessor
+    except ImportError:
+        print("❌ No Data Processor found.")
+        ProcessorClass = None
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for frontend communication
@@ -55,7 +64,7 @@ def process_flood_event():
         "num_time_steps": 10
     }
     """
-    if SatelliteDataProcessor is None:
+    if ProcessorClass is None:
         return jsonify({
             'error': 'Data processing module not available'
         }), 500
@@ -72,11 +81,14 @@ def process_flood_event():
         num_time_steps = data.get('num_time_steps', 10)
         
         # Process the flood event
-        processor = SatelliteDataProcessor()
-        results = processor.process_flood_event(flood_date, num_time_steps)
+        processor = ProcessorClass()  # <--- Added ()
+        if hasattr(processor, 'process_flood_event_ai'):
+            results = processor.process_flood_event_ai(flood_date, num_time_steps)
+        else:
+            results = processor.process_flood_event(flood_date, num_time_steps)
         
         # Store results
-        event_id = f"event_{flood_date_str}_{location['lat']}_{location['lon']}"
+        '''event_id = f"event_{flood_date_str}_{location['lat']}_{location['lon']}"
         processed_events[event_id] = {
             'flood_date': flood_date_str,
             'location': location,
@@ -84,7 +96,26 @@ def process_flood_event():
             'time_series': results['time_series'].to_dict('records'),
             'processed_at': datetime.now().isoformat()
         }
-        
+        '''
+        # Check if we should call the AI method or the Standard method
+        if hasattr(processor, 'process_flood_event_ai'):
+            results = processor.process_flood_event_ai(flood_date, num_time_steps)
+        else:
+            results = processor.process_flood_event(flood_date, num_time_steps)
+
+        event_id = f"event_{flood_date_str}_{location['lat']}_{location['lon']}"
+
+        # Safely get AI metrics if they exist
+        ai_metrics = results.get('ai_metrics', None)
+
+        processed_events[event_id] = {
+            'flood_date': flood_date_str,
+            'location': location,
+            'recovery_metrics': results['recovery_metrics'],
+            'ai_metrics': ai_metrics,
+            'time_series': results['time_series'].to_dict('records'),
+            'processed_at': datetime.now().isoformat()
+        }
         return jsonify({
             'event_id': event_id,
             'status': 'processed',
@@ -93,6 +124,7 @@ def process_flood_event():
         }), 200
         
     except Exception as e:
+        print(f"Error: {e}")
         return jsonify({
             'error': str(e)
         }), 500
@@ -110,6 +142,7 @@ def get_recovery_metrics(event_id):
     return jsonify({
         'event_id': event_id,
         'recovery_metrics': event_data['recovery_metrics'],
+        'ai_metrics': event_data.get('ai_metrics'),
         'time_series': event_data['time_series']
     }), 200
 
